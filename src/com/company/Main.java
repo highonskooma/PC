@@ -2,7 +2,9 @@ package com.company;
 import java.util.Scanner;
 
 class Counter{
-    int value;
+    private int value;
+    void increment() { value += 1; }
+    int value() { return value; }
 }
 
 class Thread_Inc extends Thread {
@@ -16,8 +18,10 @@ class Thread_Inc extends Thread {
 
     public void run(){
         for (int i=0;i<j;i++){
-            //System.out.println(i);
-            c.value+=1;
+            // controlo de acesso à variavel partilhada
+            synchronized (c) {
+                c.increment();
+            }
         }
     }
 }
@@ -58,13 +62,13 @@ class Main{
         }
         for (int i=0;i<k;++i){
             a[i].start();
-            System.out.println(c.value);
+            System.out.println(c.value());
         }
         for (int i=0;i<k;++i){
             a[i].join();
         }
 
-        System.out.println(c.value);
+        System.out.println(c.value());
     }
 
 }
