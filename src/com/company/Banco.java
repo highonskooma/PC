@@ -17,7 +17,7 @@ public class Banco {
         return this.contas;
     }
 
-    private Account get(int id) throws InvalidAccount {
+    public Account get(int id) throws InvalidAccount {
         if (id<0 || id>=contas.length ) throw new InvalidAccount();
         return contas[id];
     }
@@ -26,6 +26,7 @@ public class Banco {
         void deposit(int id, int val) throws InvalidAccount;
         void withdraw(int id, int val) throws InvalidAccount, Account.NotEnoughFunds;
         int totalBalance(int accounts[]) throws InvalidAccount;
+        void transfer(int from, int to, int amount) throws InvalidAccount, Account.NotEnoughFunds;
     }
 
     public void deposit(int id, int val) throws InvalidAccount {
@@ -47,6 +48,14 @@ public class Banco {
         return total;
     }
 
+    public void transfer (int from, int to, int amount) throws InvalidAccount, Account.NotEnoughFunds {
+        Account source = this.get(from);
+        Account dest = this.get(to);
+        synchronized (this) {
+            source.withdraw(amount);
+            dest.deposit(amount);
+        }
+    }
 
 
     public static class InvalidAccount extends Exception {}
