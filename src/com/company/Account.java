@@ -3,11 +3,9 @@ package com.company;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Account {
-    private int id;
     private int saldo;
 
-    public Account(int id) {
-        this.id = id;
+    public Account() {
         this.saldo = 0;
     }
 
@@ -16,10 +14,6 @@ public class Account {
     public void withdraw(int val) throws NotEnoughFunds {
         if (this.saldo < val) throw new NotEnoughFunds();
         this.saldo -= val;
-    }
-
-    public int getID() {
-        return this.id;
     }
 
     public static class NotEnoughFunds extends Exception {}
