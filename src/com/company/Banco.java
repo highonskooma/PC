@@ -11,6 +11,10 @@ public class Banco {
     Lock l = new ReentrantLock();
     int last_id = 0;
 
+    public Banco(int N) {
+
+    }
+
     int createAccount(int balance) {
         //construtor e metodo devem ser chamados sem locks
         //adquiridos para não ocupar o lock desnecessariamente
