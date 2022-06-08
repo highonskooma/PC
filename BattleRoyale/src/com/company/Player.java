@@ -14,9 +14,6 @@ public class Player extends Avatar{
         super();
     }
 
-    public void settings() {
-        size(900, 900);
-    }
 
     public void setup() {
         x = y = width/2;
@@ -35,12 +32,16 @@ public class Player extends Avatar{
 
         m.fill(255);
         m.ellipse(m.mouseX, m.mouseY, 12, 12);
+        m.strokeWeight(2);
         switch (this.cor) {
-            case 0 -> m.fill(0, 204, 102);
-            case 1 -> m.fill(0, 153, 255);
-            case 2 -> m.fill(255, 0, 0);
+            case 0 -> m.stroke(0, 204, 102);
+            case 1 -> m.stroke(0, 153, 255);
+            case 2 -> m.stroke(255, 0, 0);
         }
-
+        if(!m.locked) {
+            if (this.size>15)
+                this.size -= 1;
+        }
         m.ellipse(x, y, this.size, this.size);
 
     }

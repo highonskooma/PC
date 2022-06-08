@@ -16,13 +16,23 @@ public class Main extends PApplet {
     //int radius = 10;
     int p_size = 24;
     //int mult = 2;
+    boolean locked = true;
     int lastTargetSpawn;
     int spawnDeltaTime=1000;
     ArrayList<Cristal> target = new ArrayList<Cristal>();
     Player p = new Player(this,p_size);
 
     public void settings() {
-        size(900, 900);
+        size(1600, 900);
+    }
+
+    public void mousePressed() {
+        locked = false;
+        fill(255, 255, 255);
+    }
+
+    public void mouseReleased() {
+        locked = true;
     }
 
     public void setup() {
