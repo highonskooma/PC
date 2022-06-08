@@ -1,38 +1,41 @@
 package com.company;
+import processing.core.PApplet;
 
-public class Avatar {
-    Integer id;
-    String cor;
+public class Avatar extends PApplet {
+    Main m;
+    int cor;
+    float x, y;
 
-
-    public Avatar(Integer id, String cor) {
-        this.id = id;
-        this.cor = cor;
+    public Avatar(Main m) {
+        this.m = m;
+        this.x = m.random(1000);
+        this.y = m.random(1000);
+        this.cor = (int) random(3);
     }
 
-    public Avatar() {
-        this.id = 0;
-        this.cor = "null";
+    Avatar(){
+        x = random(1000);
+        y = random(1000);
+        cor = 0;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void draw(){
+        m.stroke(100);
+        switch (this.cor) {
+            case 0 -> m.fill(0, 204, 102);
+            case 1 -> m.fill(0, 153, 255);
+            case 2 -> m.fill(255, 0, 0);
+        }
+        m.ellipse(x,y, 10, 10); //target's location and size
     }
 
-    public void setCor(String cor) {
-        this.cor = cor;
+    public float getX() {return this.x;}
+    public float getY() {return this.y;}
+
+    @Override
+    public String toString() {
+        return ("x:"+this.x+
+                " , y: "+ this.y);
     }
-
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getCor() {
-        return cor;
-    }
-
-
 
 }

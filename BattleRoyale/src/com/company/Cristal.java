@@ -4,7 +4,10 @@ public class Cristal extends Avatar {
     public Cristal() {
         super();
     }
-    public Cristal(Integer id, String cor) {
-        super(id,cor);
+    /*
+    public Cristal(int x, int y, int cor) {
+        super(x,y,cor);
     }
+
+     */
 }

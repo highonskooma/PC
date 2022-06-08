@@ -7,9 +7,11 @@ public class Player extends Avatar{
         super();
         this.size = 0;
     }
-
-    public Player(Integer id, String cor, Integer size) {
-        super(id,cor);
+/*
+    public Player(int x, int y, int cor,int size) {
+        super(x,y,cor);
         this.size = size;
     }
+
+ */
 }
