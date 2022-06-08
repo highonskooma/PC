@@ -12,12 +12,14 @@ public class Main extends PApplet {
 
     float x, y;
     float easing = (float) 0.05;
-    PVector circle = new PVector(250, 250);
-    int radius = 10;
+    //PVector circle = new PVector(250, 250);
+    //int radius = 10;
     int p_size = 24;
+    //int mult = 2;
     int lastTargetSpawn;
     int spawnDeltaTime=1000;
-    ArrayList<Avatar> target = new ArrayList<Avatar>();
+    ArrayList<Cristal> target = new ArrayList<Cristal>();
+    Player p = new Player(this,p_size);
 
     public void settings() {
         size(900, 900);
@@ -31,8 +33,8 @@ public class Main extends PApplet {
     }
 
     void spawnTarget() {
-        Avatar a = new Avatar(this);
-        target.add(a);
+        Cristal c = new Cristal(this);
+        target.add(c);
         lastTargetSpawn = millis();
     }
 
@@ -41,26 +43,17 @@ public class Main extends PApplet {
         fill(255);
         text(nf(frameRate, 1, 1)+" FPS", 10, 10);   // show FPS
 
-        for (Iterator<Avatar> iterator = target.iterator(); iterator.hasNext(); ) {
-            Avatar t = iterator.next();
-            float x_value = Math.abs(x-t.getX());
-            float y_value = Math.abs(y-t.getY());
-            float size = x_value * y_value; // diferença absoluta entre as coords do cristal e player
-            if ( size < p_size ) {
+        for (Iterator<Cristal> iterator = target.iterator(); iterator.hasNext(); ) {
+            Cristal t = iterator.next();
+            if ( dist(t.getX(),t.getY(),p.getX(),p.getY()) < p.getSize()) {
                 iterator.remove(); // eat crystal
-                p_size += 5; // size amount to increase
+                p.setSize(p.getSize() + 5); // size amount to increase
+                p.setCor(t.getCor());
             }
             t.draw();
         }
 
-        PVector m = new PVector(mouseX, mouseY);
-
-        x = x + (m.x - x) * easing;
-        y = y + (m.y - y) * easing;
-
-        fill(255, 0, 0);
-        ellipse(x, y, p_size, p_size);
-        ellipse(m.x, m.y, 12, 12);
+        p.draw();
 
         if (millis() - lastTargetSpawn > spawnDeltaTime) {
             //System.out.println(lastTargetSpawn+" "+ target.toString());
