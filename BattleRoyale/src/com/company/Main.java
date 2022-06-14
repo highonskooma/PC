@@ -60,7 +60,9 @@ public class Main extends PApplet {
                 p.setSize(p.getSize() + 5); // size amount to increase
                 p.setCor(t.getCor());
             }
-            t.draw();
+            else {
+                t.draw();
+            }
         }
 
         p.draw();
