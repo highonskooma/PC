@@ -2,7 +2,10 @@ package com.company;
 
 import jdk.jshell.execution.Util;
 
-public class Utilizador {
+import java.io.Serializable;
+import java.util.concurrent.Semaphore;
+
+public class Utilizador implements Serializable {
     Integer id;
     String nome;
     private String password;
@@ -77,7 +80,7 @@ public class Utilizador {
                 ", password='" + password + '\'' +
                 ", n_vitorias=" + n_vitorias +
                 ", circulo=" + circulo +
-                '}';
+                "}\n";
     }
 
     //Modified clone() method in Employee class

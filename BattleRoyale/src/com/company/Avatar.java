@@ -1,7 +1,9 @@
 package com.company;
 import processing.core.PApplet;
 
-public class Avatar extends PApplet {
+import java.io.Serializable;
+
+public class Avatar extends PApplet implements Serializable {
     Main m;
     int cor;
     float x, y;

@@ -77,6 +77,10 @@ public class Menu {
         return false;
         }   
 */
+    public ArrayList<Utilizador> getLogins() {
+        return this.logins;
+    }
+
     public Utilizador getUser() {
         return this.user;
     }
@@ -87,6 +91,10 @@ public class Menu {
 
     public void addUser(Utilizador u) {
         this.logins.add(u);
+    }
+
+    public void setLogins(ArrayList<Utilizador> array) {
+        this.logins = array;
     }
 
 }

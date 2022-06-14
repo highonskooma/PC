@@ -1,4 +1,6 @@
 package com.company;
+import java.io.*;
+import java.util.ArrayList;
 
 public class Run {
     private Menu menuInicial;
@@ -12,7 +14,20 @@ public class Run {
     }
 
     // Método que lê a opção pretendida do menu inicial e redireciona para essa função (login/signup/leaderbords)
-    public void startInicial() throws CloneNotSupportedException {
+    public void startInicial() {
+        try (FileInputStream fis = new FileInputStream("/home/blackgaze/Documents/PC/BattleRoyale/src/obj");
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+            // read object from file
+            ArrayList<Utilizador> locals = (ArrayList<Utilizador>) ois.readObject();
+            this.menuInicial.setLogins(locals);
+            // print object
+            System.out.println("Utilizadores atuais: "+locals);
+
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
         this.menuInicial.setOpcao(0);
 
         while (this.menuInicial.getOpcao() != 4) {
@@ -33,6 +48,7 @@ public class Run {
                 case 3: // Leaderboards
                     break;
                 case 4: // Sair
+                    WriteObjectToFile(this.menuInicial.getLogins());
                     break;
                 default:
                     System.out.print("A opcão que escolheu é inválida.\n\n\n");
@@ -41,7 +57,22 @@ public class Run {
         }
     }
 
-    public static void main(String[] args) throws CloneNotSupportedException {
+    final String filepath="/home/blackgaze/Documents/PC/BattleRoyale/src/obj";
+    public void WriteObjectToFile(ArrayList<Utilizador> serObj) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(filepath);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(serObj);
+            objectOut.close();
+            System.out.println("The Object  was succesfully written to a file");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
         new Run().startInicial();
     }
+
 }
