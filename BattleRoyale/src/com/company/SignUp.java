@@ -11,9 +11,9 @@ public class SignUp extends Menu {
 
     public void mostrarMenuSignUpU() {
         System.out.println("Nome");
-        this.setName( leString() );
+        this.user.setNome( leString() );
         System.out.println("\nPassword");
-        this.setPass( leString() );
+        this.user.setPass( leString() );
         System.out.println("\nEmail");
         this.setEmail( leString() );
         //logins.put(this.nomeutilizador,this.passwd);
@@ -34,9 +34,11 @@ public class SignUp extends Menu {
 
     public void startSignUp() {
         this.mostrarMenuSignUpU();
-        System.out.println("Username: "+this.username +"\nPaasword: "+this.password+"\nemail: "+this.email);
+
+        System.out.println(this.user.toString());
+        //System.out.println("Username: "+this.username +"\nPaasword: "+this.password+"\nemail: "+this.email);
         System.out.print("Registado com sucesso!!\nA redireciona-lo para página inicial...\n\n\n");
-        this.mostrarMenuInicial();
+        //this.mostrarMenuInicial();
 
     }
 

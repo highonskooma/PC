@@ -1,18 +1,19 @@
 package com.company;
 
+import jdk.jshell.execution.Util;
+
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Menu {
     private int opcao;
-    String username;
-    String password;
-    HashMap<String, String> logins;
+    Utilizador user;
+    ArrayList<Utilizador> logins;
 
     public Menu() {
         this.opcao=0;
-        this.username ="";
-        this.password ="";
-        this.logins = new HashMap<String,String>();
+        this.user = new Utilizador();
+        this.logins = new ArrayList<>();
     }
 
     public int getOpcao() {
@@ -61,7 +62,7 @@ public class Menu {
         else
           setOpcao(opcaoAUX);
       }
-
+/*
     public boolean userLogIn(String username){
         for (String nome: this.logins.keySet())
             if (Objects.equals(nome, username)) //devia ser um equals secalhar
@@ -75,13 +76,17 @@ public class Menu {
             return true;
         return false;
         }   
-
-    public void setName(String usr) {
-        this.username =usr;
+*/
+    public Utilizador getUser() {
+        return this.user;
     }
 
-    public void setPass(String pdw) {
-        this.password =pdw;
+    public void setUser(Utilizador u) {
+        this.user = u;
+    }
+
+    public void addUser(Utilizador u) {
+        this.logins.add(u);
     }
 
 }
