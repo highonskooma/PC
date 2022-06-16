@@ -1,27 +1,63 @@
+%% Exemplo: servidor de chat em Erlang (V2)
 -module(server).
--compile(export_all).
+-export([start/1, stop/1]).
 
-start_server(Port) ->
-    Pid = spawn_link(fun() ->
-        {ok, Listen} = gen_tcp:listen(Port, [binary, {active, false}]),
-        spawn(fun() -> acceptor(Listen) end),
-        timer:sleep(infinity)
-    end),
-    {ok, Pid}.
+start(Port) -> spawn(fun() -> server_start(Port) end).
+stop(Server) -> Server ! stop.
 
-acceptor(ListenSocket) ->
-    {ok, Socket} = gen_tcp:accept(ListenSocket),
-    spawn(fun() -> acceptor(ListenSocket) end),
-    handle(Socket).
+server_start(Port) ->
+    {ok, LSock} = gen_tcp:listen(Port, [binary, {packet, line}, {reuseaddr, true}]),
+    Room = spawn(fun()->room([]) end),
+    FirstAcceptor = spawn(fun() -> acceptor(LSock, Room, self()) end),
+    handleServer([FirstAcceptor], Room, LSock).
 
-%% Echoing back whatever was obtained
-handle(Socket) ->
-    inet:setopts(Socket, [{active, once}]),
+handleServer(List, Room, LSock) ->
     receive
-        {tcp, Socket, <<"quit", _/binary>>} ->
-            gen_tcp:close(Socket);
-        {tcp, Socket, Msg} ->
-            gen_tcp:send(Socket, Msg),
-            handle(Socket)
+        {new, Acceptor} -> handleServer([Acceptor | List], Room, LSock);
+        stop ->
+            [Acceptor ! stop || Acceptor <- List],
+            Room ! stop,
+            gen_tcp:shutdown(LSock, read_write)
     end.
 
+acceptor(LSock, Room, Server) ->
+    {ok, Sock} = gen_tcp:accept(LSock),
+    NewAcceptor = spawn(fun() -> acceptor(LSock, Room, Server) end),
+    Server ! {new, NewAcceptor},
+    Room ! {enter, self()},
+    user(Sock, Room).
+
+room(Pids) ->
+    receive
+        stop -> io:format("room OK~n", []);
+        {enter, Pid} ->
+            io:format("user entered ~n", []),
+            room([Pid | Pids]);
+        {line, Data} = Msg ->
+            io:format("received ~p ~n", [Data]),
+            [Pid ! Msg || Pid <- Pids],
+            room(Pids);
+        {leave, Pid} ->
+            io:format("user left ~n", []),
+            room(Pids -- [Pid])
+    end.
+
+user(Sock, Room) ->
+    receive
+        stop ->
+            gen_tcp:send(Sock, "close"),
+            io:format("user OK~n", []);
+        {tcp, Socket, <<"quit", _/binary>>} ->
+            gen_tcp:close(Socket),
+            io:format("user left ~n");
+        {line, Data} ->
+            gen_tcp:send(Sock, Data),
+            user(Sock, Room);
+        {tcp, _, Data} ->
+            Room ! {line, Data},
+            user(Sock, Room);
+        {tcp_closed, _} ->
+            Room ! {leave, self()};
+        {tcp_error, _, _} ->
+            Room ! {leave, self()}
+    end.
