@@ -27,15 +27,17 @@ acceptor(LSock, Room, Server) ->
     Room ! {enter, self()},
     user(Sock, Room).
 
+sendMessage(Pid, Message) -> Pid ! {broadcast, Message}.
+
 room(Pids) ->
     receive
         stop -> io:format("room OK~n", []);
         {enter, Pid} ->
             io:format("user entered ~n", []),
             room([Pid | Pids]);
-        {line, Data} = Msg ->
+        {line, Data, Pid} ->
             io:format("received ~p ~n", [Data]),
-            [Pid ! Msg || Pid <- Pids],
+            [ sendMessage(UPid,Data) || UPid <- Pids, Pid /= UPid ],
             room(Pids);
         {leave, Pid} ->
             io:format("user left ~n", []),
@@ -44,17 +46,21 @@ room(Pids) ->
 
 user(Sock, Room) ->
     receive
+        {broadcast, Data} -> 
+            gen_tcp:send(Sock,Data),
+            user(Sock,Room);
         stop ->
             gen_tcp:send(Sock, "close"),
             io:format("user OK~n", []);
         {tcp, Socket, <<"quit", _/binary>>} ->
             gen_tcp:close(Socket),
             io:format("user left ~n");
-        {line, Data} ->
+        {line, Data} -> 
             gen_tcp:send(Sock, Data),
+            %io:format("socket id ~p ~n", [Sock]),
             user(Sock, Room);
         {tcp, _, Data} ->
-            Room ! {line, Data},
+            Room ! {line, Data, self()},
             user(Sock, Room);
         {tcp_closed, _} ->
             Room ! {leave, self()};
