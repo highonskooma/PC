@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 public class Main extends PApplet {
     public static void main(String[] args) {
-	    PApplet.main("com.company.Main", args);
+        PApplet.main("com.company.Main", args);
     }
 
     float x, y;
@@ -22,8 +22,9 @@ public class Main extends PApplet {
     int lastTargetSpawn;
     int spawnDeltaTime=1000;
     ArrayList<Cristal> target = new ArrayList<Cristal>();
-    Player p = new Player(this,p_size,"blackgaze");
+    Player p = new Player(this,p_size);
     GreetClient client = new GreetClient();
+
 
 
     public void settings() {
@@ -49,6 +50,7 @@ public class Main extends PApplet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        p.setNome(args[0]);
     }
 
     void spawnTarget() {

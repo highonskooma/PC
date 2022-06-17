@@ -6,10 +6,10 @@ public class Player extends Avatar{
     Integer size;
     String name;
 
-    public Player(Main m, Integer size,String user) {
+    public Player(Main m, Integer size) {
         super(m);
         this.size = size;
-        this.name=user;
+        this.name="";
     }
 
     public Player() {
@@ -64,4 +64,7 @@ public class Player extends Avatar{
         return size;
     }
 
+    public void setNome(String arg) {
+        this.name = arg;
+    }
 }

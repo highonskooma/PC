@@ -5,10 +5,11 @@ import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class Run {
+public class Run extends PApplet{
     private Menu menuInicial;
     private Login menuLogIn;
     private SignUp menuSignUp;
+    final String filepath="/home/blackgaze/Documents/PC/BattleRoyale/src/obj";
 
     public Run() {
         this.menuInicial = new Menu();
@@ -18,41 +19,46 @@ public class Run {
 
     // Método que lê a opção pretendida do menu inicial e redireciona para essa função (login/signup/leaderbords)
     public void startInicial() {
-        try (FileInputStream fis = new FileInputStream("/home/jdsilva/Documents/PC/trabalho/BattleRoyale/src/obj");
+        try (FileInputStream fis = new FileInputStream(filepath);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
 
             // read object from file
             ArrayList<Utilizador> locals = (ArrayList<Utilizador>) ois.readObject();
             this.menuInicial.setLogins(locals);
             this.menuLogIn.setLogins(locals);
-            this.menuSignUp.setLogins(locals);
+            //this.menuSignUp.setLogins(locals);
             // print object
-            System.out.println("Utilizadores atuais: "+locals);
+            System.out.println("Contas: "+locals);
 
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
         this.menuInicial.setOpcao(0);
+        System.out.println("Utilizador Atual: Anónimo");
 
-        while (this.menuInicial.getOpcao() != 4) {
+        while (this.menuInicial.getOpcao() != 5) {
             System.out.print("\tAgar.IO\n\n");
             this.menuInicial.mostrarMenuInicial();
 
             switch (this.menuInicial.getOpcao()) {
-                case 1: // Log in
+                case 1: // partida
+                    PApplet.main("com.company.Main", new String[]{this.menuInicial.getUser().getNome()});
+                    break;
+                case 2: // Log in
                     this.menuLogIn.startLogIn();
+                    this.menuInicial.setUser(menuLogIn.getUser().clone());
+                    System.out.println("Utilizador Atual: "+menuInicial.getUser().toString());
                     break;
-                case 2: // Sign up
+                case 3: // Sign up
                     this.menuSignUp.startSignUp();
-                    //for(int i=0;i<menuInicial.logins.size();i++) {
                     this.menuInicial.addUser(menuSignUp.getUser().clone());
-                    System.out.println("MenuSignUp: "+this.menuSignUp.getUser().toString());
-                    System.out.println("MenuInicial: "+this.menuInicial.logins.toString());
+                    this.menuInicial.setUser(menuSignUp.getUser().clone());
+                    System.out.println("Utilizador Atual: "+menuInicial.getUser().toString());
                     break;
-                case 3: // Leaderboards
+                case 4: // Leaderboards
                     break;
-                case 4: // Sair
+                case 5: // Sair
                     WriteObjectToFile(this.menuInicial.getLogins());
                     break;
                 default:
@@ -62,7 +68,7 @@ public class Run {
         }
     }
 
-    final String filepath="/home/jdsilva/Documents/PC/trabalho/BattleRoyale/src/obj";
+
     public void WriteObjectToFile(ArrayList<Utilizador> serObj) {
         try {
             FileOutputStream fileOut = new FileOutputStream(filepath);
@@ -70,15 +76,13 @@ public class Run {
             objectOut.writeObject(serObj);
             objectOut.close();
             System.out.println("The Object  was succesfully written to a file");
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Run().startInicial();
-
     }
 
 }

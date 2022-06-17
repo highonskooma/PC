@@ -47,12 +47,13 @@ public class Menu {
     }
 
     public void mostrarMenuInicial() {
-        System.out.println("1: Log in");
-        System.out.println("2: Registo");
-        System.out.println("3: Leaderbord");
-        System.out.println("4: Sair");
+        System.out.println("1: Jogar");
+        System.out.println("2: Log in");
+        System.out.println("3: Registo");
+        System.out.println("4: Leaderbord");
+        System.out.println("5: Sair");
 
-        System.out.println("Utilizadores atuais: "+this.logins);
+        //System.out.println("Utilizadores atuais: "+this.logins);
         int opcaoAUX = leOpcao();
         if (opcaoAUX == Integer.MAX_VALUE) {
           System.out.println("Introduziu uma opcção inválida. Introduza apenas números.\n\n");
@@ -63,35 +64,9 @@ public class Menu {
           setOpcao(opcaoAUX);
       }
 
-    public boolean userLogIn(String username){
-        for (Utilizador user: this.logins){
-            String name = user.getNome();
-            if (name.equals(username))
-                System.out.println("nome certo\n");
-                return true;
-        }
 
-        return false;
-    }
     
-    public boolean VerificaPW(String username, String pw){
-        for (Utilizador user: this.logins){
-            String name=user.getNome();
-            if (name.equals(username)){
-                String pass= user.getPass();
-                if (pass.equals(pw)){
-                    System.out.println("passwd certa\n");
-                    return true;
-                }
-                else {
-                    System.out.println("passwd errada\n");
-                    return false;
-                }
-            }
-        }
 
-        return false;
-    }   
 
     public ArrayList<Utilizador> getLogins() {
         return this.logins;

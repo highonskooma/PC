@@ -6,11 +6,39 @@ public class Login extends Menu {
         super();
     }
 
+    public boolean userLogIn(String username){
+        for (Utilizador user: this.logins){
+            String name = user.getNome();
+            if (name.equals(username))
+                return true;
+        }
+        System.out.println("Username errado. Tente novamente.");
+        return false;
+    }
+
+    public boolean VerificaPW(String username, String pw){
+        for (Utilizador user: this.logins){
+            String name=user.getNome();
+            if (name.equals(username)){
+                String pass= user.getPass();
+                if (pass.equals(pw)){
+                    System.out.println("Login Efetuado.");
+                    return true;
+                }
+                else {
+                    System.out.println("Password Errada. Tente Novamente.");
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
     // Método que efetua o login de um cliente atraves do email
     public void mostrarMenuLogIn() {
         String name;
         String pw;
-        System.out.println(this.logins);
+        //System.out.println(this.logins);
         System.out.println("Nome");
         name=leString();
         if(!userLogIn(name)) return;
@@ -18,8 +46,13 @@ public class Login extends Menu {
         pw=leString();
         if(!VerificaPW(name,pw)) return;
 
-        this.user.setNome( name );
-        this.user.setPass( pw );
+        for(Utilizador user : this.logins) {
+            if(user.getNome().equals(name)) {
+                setUser(user);
+                System.out.println(user.toString());
+            }
+        }
+
     }
 
     public void startLogIn() {
