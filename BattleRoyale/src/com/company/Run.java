@@ -1,4 +1,6 @@
 package com.company;
+import processing.core.PApplet;
+
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -73,7 +75,7 @@ public class Run {
     }
 
     public static void main(String[] args) throws IOException {
-        //new Run().startInicial();
+        new Run().startInicial();
 
     }
 

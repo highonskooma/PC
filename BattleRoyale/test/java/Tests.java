@@ -51,7 +51,7 @@ public class Tests {
     }
 
     @Test
-    public void manyClients_whenServerBoradcast_theCorrect() throws IOException, InterruptedException {
+    public void manyClients_whenServerBroadcast_theCorrect() throws IOException, InterruptedException {
         int N=3;
         Thread[] ts = new Thread[N];
         for (int i=0; i<N; i++) {
@@ -67,7 +67,6 @@ public class Tests {
         }
         for (int i=0; i<N; i++)	ts[i].start();
         for (int i=0; i<N; i++) ts[i].join();
-
     }
 
 }

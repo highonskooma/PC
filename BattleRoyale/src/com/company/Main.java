@@ -1,6 +1,8 @@
 package com.company;
 import processing.core.PApplet;
 import processing.core.PVector;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -20,7 +22,9 @@ public class Main extends PApplet {
     int lastTargetSpawn;
     int spawnDeltaTime=1000;
     ArrayList<Cristal> target = new ArrayList<Cristal>();
-    Player p = new Player(this,p_size);
+    Player p = new Player(this,p_size,"blackgaze");
+    GreetClient client = new GreetClient();
+
 
     public void settings() {
         size(1600, 900);
@@ -40,6 +44,11 @@ public class Main extends PApplet {
         noStroke();
         smooth();
         lastTargetSpawn=millis();
+        try {
+            client.startConnection("127.0.0.1",8091);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void spawnTarget() {
@@ -66,6 +75,11 @@ public class Main extends PApplet {
         }
 
         p.draw();
+        try {
+            client.sendMessage(p.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (millis() - lastTargetSpawn > spawnDeltaTime) {
             //System.out.println(lastTargetSpawn+" "+ target.toString());

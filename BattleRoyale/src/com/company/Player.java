@@ -4,10 +4,12 @@ import processing.core.PVector;
 
 public class Player extends Avatar{
     Integer size;
+    String name;
 
-    public Player(Main m, Integer size) {
+    public Player(Main m, Integer size,String user) {
         super(m);
         this.size = size;
+        this.name=user;
     }
 
     public Player() {
@@ -43,7 +45,16 @@ public class Player extends Avatar{
                 this.size -= 1;
         }
         m.ellipse(x, y, this.size, this.size);
+        m.fill(0);
+        m.text(this.name, x-25, y);
 
+    }
+
+    @Override
+    public String toString() {
+        return (this.name+
+                " x:"+this.x+
+                " , y: "+ this.y);
     }
 
     public void setSize(Integer size) {
