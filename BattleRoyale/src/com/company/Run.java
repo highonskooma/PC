@@ -18,12 +18,14 @@ public class Run {
 
     // Método que lê a opção pretendida do menu inicial e redireciona para essa função (login/signup/leaderbords)
     public void startInicial() {
-        try (FileInputStream fis = new FileInputStream("/home/blackgaze/Documents/PC/BattleRoyale/src/obj");
+        try (FileInputStream fis = new FileInputStream("/home/jdsilva/Documents/PC/trabalho/BattleRoyale/src/obj");
              ObjectInputStream ois = new ObjectInputStream(fis)) {
 
             // read object from file
             ArrayList<Utilizador> locals = (ArrayList<Utilizador>) ois.readObject();
             this.menuInicial.setLogins(locals);
+            this.menuLogIn.setLogins(locals);
+            this.menuSignUp.setLogins(locals);
             // print object
             System.out.println("Utilizadores atuais: "+locals);
 
@@ -34,7 +36,7 @@ public class Run {
         this.menuInicial.setOpcao(0);
 
         while (this.menuInicial.getOpcao() != 4) {
-            System.out.print("\tTraz Aqui\n\n");
+            System.out.print("\tAgar.IO\n\n");
             this.menuInicial.mostrarMenuInicial();
 
             switch (this.menuInicial.getOpcao()) {
@@ -60,7 +62,7 @@ public class Run {
         }
     }
 
-    final String filepath="/home/blackgaze/Documents/PC/BattleRoyale/src/obj";
+    final String filepath="/home/jdsilva/Documents/PC/trabalho/BattleRoyale/src/obj";
     public void WriteObjectToFile(ArrayList<Utilizador> serObj) {
         try {
             FileOutputStream fileOut = new FileOutputStream(filepath);
