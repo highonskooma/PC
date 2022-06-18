@@ -54,7 +54,8 @@ public class Player extends Avatar{
     public String toString() {
         return (this.name+
                 " "+this.x+
-                " "+ this.y);
+                " "+ this.y+
+                " "+ this.size);
     }
 
     public void setSize(Integer size) {

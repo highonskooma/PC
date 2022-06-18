@@ -36,7 +36,7 @@ room(Pids) ->
             room([Pid | Pids]);
         {line, Data, Pid} ->
             io:format("received ~p ~n", [Data]),
-            [ UPid ! {line,Data} || UPid <- Pids ],
+            [ UPid ! {line,Data} || UPid <- Pids, UPid /= Pid ],
             room(Pids);
         {leave, Pid} ->
             io:format("user left ~n", []),

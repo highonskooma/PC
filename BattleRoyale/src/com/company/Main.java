@@ -33,7 +33,7 @@ public class Main extends PApplet {
     ArrayList<Cristal> target = new ArrayList<Cristal>();
     Player p = new Player(this,p_size);
     GreetClient client = new GreetClient(); // socket to send info to other players
-    Socket sock = new Socket("127.0.0.1",8091); // socket to receive info from other players
+    //Socket sock = new Socket("127.0.0.1",8091); // socket to receive info from other players
 
 
 
@@ -51,7 +51,7 @@ public class Main extends PApplet {
     }
 
     public void setup() {
-        frameRate(30);
+        frameRate(60);
         x = y = width/2;
         noStroke();
         smooth();
@@ -99,11 +99,9 @@ public class Main extends PApplet {
             });
             ts[1] = new Thread(() -> {
                 try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-                    String[] tkn = in.readLine().split(" ");
-                    if (!tkn[0].equals(p.getNome())) {
-                        ellipse(Float.parseFloat(tkn[1]),Float.parseFloat(tkn[2]),24,24);
-                    }
+                    //BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                    String[] tkn = client.listener().split(" ");
+                    ellipse(Float.parseFloat(tkn[1]),Float.parseFloat(tkn[2]), Integer.parseInt(tkn[3]),Integer.parseInt(tkn[3]));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
