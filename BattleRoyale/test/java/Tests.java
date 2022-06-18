@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import processing.core.PApplet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Tests {
     Tests calculator;
     GreetClient client = new GreetClient();
-
+/*
     @Test
     public void givenClient_whenServerEchosMessage_thenCorrect() throws IOException {
         GreetClient client = new GreetClient();
@@ -68,5 +69,7 @@ public class Tests {
         for (int i=0; i<N; i++)	ts[i].start();
         for (int i=0; i<N; i++) ts[i].join();
     }
+
+*/
 
 }

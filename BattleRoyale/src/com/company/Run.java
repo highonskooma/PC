@@ -43,7 +43,15 @@ public class Run extends PApplet{
 
             switch (this.menuInicial.getOpcao()) {
                 case 1: // partida
-                    PApplet.main("com.company.Main", new String[]{this.menuInicial.getUser().getNome()});
+                    Thread[] ts = new Thread[2];
+                    ts[0] = new Thread(() -> {
+                        PApplet.main("com.company.Main", new String[]{"highonskooma"});
+                    });
+                    ts[1] = new Thread(() -> {
+                        PApplet.main("com.company.Main", new String[]{"blackgaze"});
+                    });
+                    ts[0].start();
+                    ts[1].start();
                     break;
                 case 2: // Log in
                     this.menuLogIn.startLogIn();

@@ -14,10 +14,10 @@ public class GreetClient {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
-    public String sendMessage(String msg) throws IOException {
+    public void sendMessage(String msg) throws IOException {
         out.println(msg);
-        String resp = in.readLine();
-        return resp;
+        //String resp = in.readLine();
+        //return resp;
     }
 
     public Utilizador sendMessage(Utilizador usr) throws IOException, ClassNotFoundException {
@@ -27,7 +27,6 @@ public class GreetClient {
         outStream.writeObject(usr);
 
         Utilizador resp = (Utilizador) inStream.readObject();
-
 
         outStream.close();
         return resp;
@@ -39,12 +38,8 @@ public class GreetClient {
         clientSocket.close();
     }
 
-    public void listener() throws IOException {
-        String line=null;
-        while((line = in.readLine()) != null) {
-            System.out.println(line);
-        }
-
+    public String listener() throws IOException {
+        return in.readLine();
     }
 
     public BufferedReader getIn() {

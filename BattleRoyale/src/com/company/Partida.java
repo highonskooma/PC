@@ -6,6 +6,7 @@ public class Partida {
     private int round = 0;
 
     public synchronized void await() throws InterruptedException {
+
         n_jogadores++;
 
         int r = round;

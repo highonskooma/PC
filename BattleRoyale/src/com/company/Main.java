@@ -2,17 +2,26 @@ package com.company;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends PApplet {
+    public Main() throws IOException {
+    }
+
     public static void main(String[] args) {
         PApplet.main("com.company.Main", args);
     }
 
-    float x, y;
+    float x, y, x1, y1;
     float easing = (float) 0.05;
     //PVector circle = new PVector(250, 250);
     //int radius = 10;
@@ -23,12 +32,13 @@ public class Main extends PApplet {
     int spawnDeltaTime=1000;
     ArrayList<Cristal> target = new ArrayList<Cristal>();
     Player p = new Player(this,p_size);
-    GreetClient client = new GreetClient();
+    GreetClient client = new GreetClient(); // socket to send info to other players
+    Socket sock = new Socket("127.0.0.1",8091); // socket to receive info from other players
 
 
 
     public void settings() {
-        size(1600, 900);
+        size(600, 600);
     }
 
     public void mousePressed() {
@@ -41,6 +51,7 @@ public class Main extends PApplet {
     }
 
     public void setup() {
+        frameRate(30);
         x = y = width/2;
         noStroke();
         smooth();
@@ -78,10 +89,30 @@ public class Main extends PApplet {
 
         p.draw();
         try {
-            client.sendMessage(p.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Thread[] ts = new Thread[2];
+            ts[0] = new Thread(() -> {
+                try {
+                    client.sendMessage(p.toString());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            ts[1] = new Thread(() -> {
+                try {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                    String[] tkn = in.readLine().split(" ");
+                    if (!tkn[0].equals(p.getNome())) {
+                        ellipse(Float.parseFloat(tkn[1]),Float.parseFloat(tkn[2]),24,24);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            for (int i = 0; i < 2; i++) ts[i].start();
+            for (int i = 0; i < 2; i++) ts[i].join();
+        } catch (InterruptedException e) { e.printStackTrace(); }
+
+
 
         if (millis() - lastTargetSpawn > spawnDeltaTime) {
             //System.out.println(lastTargetSpawn+" "+ target.toString());

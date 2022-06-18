@@ -53,8 +53,8 @@ public class Player extends Avatar{
     @Override
     public String toString() {
         return (this.name+
-                " x:"+this.x+
-                " , y: "+ this.y);
+                " "+this.x+
+                " "+ this.y);
     }
 
     public void setSize(Integer size) {
@@ -66,5 +66,9 @@ public class Player extends Avatar{
 
     public void setNome(String arg) {
         this.name = arg;
+    }
+
+    public String getNome() {
+        return this.name;
     }
 }

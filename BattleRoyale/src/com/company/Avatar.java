@@ -10,8 +10,8 @@ public class Avatar extends PApplet implements Serializable {
 
     public Avatar(Main m) {
         this.m = m;
-        this.x = m.random(1000);
-        this.y = m.random(1000);
+        this.x = m.random(600);
+        this.y = m.random(600);
         this.cor = (int) random(3);
     }
 
