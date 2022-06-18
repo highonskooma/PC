@@ -1,9 +1,10 @@
-%% Exemplo: servidor de chat em Erlang (V2)
 -module(server).
--export([start/1, stop/1]).
+-export([start/1, stop/1, random_cristal/0]).
 
 start(Port) -> spawn(fun() -> server_start(Port) end).
 stop(Server) -> Server ! stop.
+
+random_cristal() -> {rand:uniform()*rand:uniform(600),rand:uniform()*rand:uniform(600)}.
 
 server_start(Port) ->
     {ok, LSock} = gen_tcp:listen(Port, [binary, {packet, line}, {reuseaddr, true}]),
@@ -27,6 +28,7 @@ acceptor(LSock, Room, Server) ->
     Room ! {enter, self()},
     user(Sock, Room).
 
+sendMessage(Pid, Message) -> Pid ! {broadcast, Message}.
 
 room(Pids) ->
     receive
@@ -37,6 +39,14 @@ room(Pids) ->
         {line, Data, Pid} ->
             io:format("received ~p ~n", [Data]),
             [ UPid ! {line,Data} || UPid <- Pids, UPid /= Pid ],
+            
+            Cristal=random_cristal(),
+            X= io_lib:format("~.2f", [element(1, Cristal)]),
+            Y= io_lib:format("~.2f", [element(2, Cristal)]),
+            StringCristal="Cristal "++ X ++ ", " ++ Y++"\n",
+            [sendMessage(UPid,StringCristal) || UPid <- Pids],
+            io:format("received ~p ~n", [StringCristal]),
+
             room(Pids);
         {leave, Pid} ->
             io:format("user left ~n", []),
@@ -45,6 +55,9 @@ room(Pids) ->
 
 user(Sock, Room) ->
     receive
+        {broadcast, Data} -> 
+            gen_tcp:send(Sock,Data),
+            user(Sock,Room);
         stop ->
             gen_tcp:send(Sock, "close"),
             io:format("user OK~n", []);
