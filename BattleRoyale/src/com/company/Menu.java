@@ -64,7 +64,9 @@ public class Menu {
           setOpcao(opcaoAUX);
       }
 
-
+    public void setNome(String name) {
+        this.user.setNome(name);
+    }
     
 
 

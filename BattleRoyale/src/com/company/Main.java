@@ -1,7 +1,9 @@
 package com.company;
+import processing.awt.PSurfaceAWT;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,6 +52,11 @@ public class Main extends PApplet {
         locked = true;
     }
 
+    void closeWindow(){
+        Frame frame = ( (PSurfaceAWT.SmoothCanvas) ((PSurfaceAWT)surface).getNative()).getFrame();
+        frame.dispose();
+        noLoop();
+    };
     public void setup() {
         frameRate(60);
         x = y = width/2;
@@ -70,6 +77,17 @@ public class Main extends PApplet {
         lastTargetSpawn = millis();
     }
 
+    void draw_gameover() {
+        background(128,0,0);
+        textAlign(CENTER);
+        text("\n\n\nGAME OVER\nVotre score : ", 320, 180);
+        fill(255);
+        textAlign(CENTER);
+    }
+
+    @Override
+    public void exitActual() {
+    }
     public void draw () {
         background(51);
         fill(255);
@@ -97,10 +115,31 @@ public class Main extends PApplet {
                     throw new RuntimeException(e);
                 }
             });
+            //for loop
             ts[1] = new Thread(() -> {
                 try {
                     //BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                     String[] tkn = client.listener().split(" ");
+                    Float t_x=Float.parseFloat(tkn[1]);
+                    Float t_y=Float.parseFloat(tkn[2]);
+                    Integer t_size=Integer.parseInt(tkn[3]);
+                    Integer t_cor=Integer.parseInt(tkn[4]);
+                    fill(0);
+                    text(tkn[0],t_x,t_y);
+                    switch (t_cor) {
+                        case 0 -> fill(0, 204, 102);
+                        case 1 -> fill(0, 153, 255);
+                        case 2 -> fill(255, 0, 0);
+                    }
+
+                    if ( dist(t_x,t_y,p.getX(),p.getY()) < t_size && (p.getSize()<t_size)) {
+                        draw_gameover();
+                        //delay(100);
+                        closeWindow();
+                    }
+                    else {
+                        p.draw();
+                    }
                     ellipse(Float.parseFloat(tkn[1]),Float.parseFloat(tkn[2]), Integer.parseInt(tkn[3]),Integer.parseInt(tkn[3]));
                 } catch (IOException e) {
                     throw new RuntimeException(e);

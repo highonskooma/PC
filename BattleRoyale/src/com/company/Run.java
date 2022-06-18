@@ -35,6 +35,7 @@ public class Run extends PApplet{
         }
 
         this.menuInicial.setOpcao(0);
+        this.menuInicial.setNome("Anónimo");
         System.out.println("Utilizador Atual: Anónimo");
 
         while (this.menuInicial.getOpcao() != 5) {
@@ -43,15 +44,11 @@ public class Run extends PApplet{
 
             switch (this.menuInicial.getOpcao()) {
                 case 1: // partida
-                    Thread[] ts = new Thread[2];
-                    ts[0] = new Thread(() -> {
-                        PApplet.main("com.company.Main", new String[]{"highonskooma"});
-                    });
-                    ts[1] = new Thread(() -> {
-                        PApplet.main("com.company.Main", new String[]{"blackgaze"});
-                    });
-                    ts[0].start();
-                    ts[1].start();
+                    try {
+                        startConnection();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case 2: // Log in
                     this.menuLogIn.startLogIn();
@@ -86,6 +83,14 @@ public class Run extends PApplet{
             System.out.println("The Object  was succesfully written to a file");
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void startConnection() throws IOException {
+        GreetClient client = new GreetClient();
+        client.startConnection("127.0.0.1",8091);
+        if (client.listener().equals("start")) {
+            PApplet.main("com.company.Main", new String[]{this.menuInicial.getUser().getNome()});
         }
     }
 
