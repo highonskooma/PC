@@ -35,7 +35,7 @@ public class Run extends PApplet{
         }
 
         this.menuInicial.setOpcao(0);
-        this.menuInicial.setNome("Anónimo");
+        this.menuInicial.setNome("Anonimo");
         System.out.println("Utilizador Atual: Anónimo");
 
         while (this.menuInicial.getOpcao() != 5) {
@@ -45,6 +45,7 @@ public class Run extends PApplet{
             switch (this.menuInicial.getOpcao()) {
                 case 1: // partida
                     try {
+                        System.out.println("Por favor aguarde.");
                         startConnection();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -90,7 +91,7 @@ public class Run extends PApplet{
         GreetClient client = new GreetClient();
         client.startConnection("127.0.0.1",8091);
         if (client.listener().equals("start")) {
-            PApplet.main("com.company.Main", new String[]{this.menuInicial.getUser().getNome()});
+            PApplet.main("com.company.Main", new String[]{this.menuInicial.getUser().getNome(),"2"});
         }
     }
 

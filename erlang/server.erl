@@ -43,8 +43,9 @@ room(Pids) ->
             Cristal=random_cristal(),
             X= io_lib:format("~.2f", [element(1, Cristal)]),
             Y= io_lib:format("~.2f", [element(2, Cristal)]),
-            StringCristal="Cristal "++ X ++ ", " ++ Y++"\n",
-            [sendMessage(UPid,StringCristal) || UPid <- Pids],
+            C= integer_to_list(length(Pids)),
+            StringCristal="Cristal "++ X ++ " " ++ Y++" "++"\n",
+            %[sendMessage(UPid,StringCristal) || UPid <- Pids],
             io:format("received ~p ~n", [StringCristal]),
 
             room(Pids);

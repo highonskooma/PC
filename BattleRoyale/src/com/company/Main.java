@@ -29,6 +29,7 @@ public class Main extends PApplet {
     //int radius = 10;
     int p_size = 24;
     //int mult = 2;
+    int n_players=1;
     boolean locked = true;
     int lastTargetSpawn;
     int spawnDeltaTime=1000;
@@ -54,9 +55,19 @@ public class Main extends PApplet {
 
     void closeWindow(){
         Frame frame = ( (PSurfaceAWT.SmoothCanvas) ((PSurfaceAWT)surface).getNative()).getFrame();
+        //delay(2000);
         frame.dispose();
-        noLoop();
+        //noLoop();
     };
+
+    void draw_gameover() {
+        background(128,0,0);
+        textAlign(CENTER);
+        text("\n\n\nGAME OVER\nVotre score : ", 320, 180);
+        fill(255);
+        textAlign(CENTER);
+        closeWindow();
+    }
     public void setup() {
         frameRate(60);
         x = y = width/2;
@@ -69,6 +80,7 @@ public class Main extends PApplet {
             e.printStackTrace();
         }
         p.setNome(args[0]);
+        n_players=Integer.parseInt(args[1]);
     }
 
     void spawnTarget() {
@@ -77,12 +89,20 @@ public class Main extends PApplet {
         lastTargetSpawn = millis();
     }
 
-    void draw_gameover() {
-        background(128,0,0);
-        textAlign(CENTER);
-        text("\n\n\nGAME OVER\nVotre score : ", 320, 180);
-        fill(255);
-        textAlign(CENTER);
+    // verifica de c1 ganha a c2
+    boolean colorWinner(Integer c1, Integer c2) {
+        switch (c1) {
+            case 0: // verde
+                if (c2==1) return true;
+                break;
+            case 1: // azul
+                if (c2==2) return true;
+                break;
+            case 2: // vermelho
+                if (c2==0) return true;
+                break;
+        }
+        return false;
     }
 
     @Override
@@ -107,7 +127,7 @@ public class Main extends PApplet {
 
         p.draw();
         try {
-            Thread[] ts = new Thread[2];
+            Thread[] ts = new Thread[n_players];
             ts[0] = new Thread(() -> {
                 try {
                     client.sendMessage(p.toString());
@@ -115,38 +135,39 @@ public class Main extends PApplet {
                     throw new RuntimeException(e);
                 }
             });
-            //for loop
-            ts[1] = new Thread(() -> {
-                try {
-                    //BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-                    String[] tkn = client.listener().split(" ");
-                    Float t_x=Float.parseFloat(tkn[1]);
-                    Float t_y=Float.parseFloat(tkn[2]);
-                    Integer t_size=Integer.parseInt(tkn[3]);
-                    Integer t_cor=Integer.parseInt(tkn[4]);
-                    fill(0);
-                    text(tkn[0],t_x,t_y);
-                    switch (t_cor) {
-                        case 0 -> fill(0, 204, 102);
-                        case 1 -> fill(0, 153, 255);
-                        case 2 -> fill(255, 0, 0);
-                    }
+            // uma thread para cada jogador
+            for(int i=1;i<n_players;i++) {
+                ts[i] = new Thread(() -> {
+                    try {
+                        //BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                        String[] tkn = client.listener().split(" ");
+                        Float t_x = Float.parseFloat(tkn[1]);
+                        Float t_y = Float.parseFloat(tkn[2]);
+                        Integer t_size = Integer.parseInt(tkn[3]);
+                        Integer t_cor = Integer.parseInt(tkn[4]);
 
-                    if ( dist(t_x,t_y,p.getX(),p.getY()) < t_size && (p.getSize()<t_size)) {
-                        draw_gameover();
-                        //delay(100);
-                        closeWindow();
+                        if (dist(t_x, t_y, p.getX(), p.getY()) < t_size && (p.getSize() < t_size) && colorWinner(t_cor, p.getCor()) ) {
+                            draw_gameover();
+                            //delay(100);
+                            //closeWindow();
+                        } else {
+                            p.draw();
+                        }
+                        switch (t_cor) {
+                            case 0 -> fill(0, 204, 102); // verde
+                            case 1 -> fill(0, 153, 255); // azul
+                            case 2 -> fill(255, 0, 0); // vermelho
+                        }
+                        ellipse(Float.parseFloat(tkn[1]), Float.parseFloat(tkn[2]), Integer.parseInt(tkn[3]), Integer.parseInt(tkn[3]));
+                        fill(0);
+                        text(tkn[0], t_x, t_y);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                    else {
-                        p.draw();
-                    }
-                    ellipse(Float.parseFloat(tkn[1]),Float.parseFloat(tkn[2]), Integer.parseInt(tkn[3]),Integer.parseInt(tkn[3]));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            for (int i = 0; i < 2; i++) ts[i].start();
-            for (int i = 0; i < 2; i++) ts[i].join();
+                });
+            }
+            for (int i = 0; i < n_players; i++) ts[i].start();
+            for (int i = 0; i < n_players; i++) ts[i].join();
         } catch (InterruptedException e) { e.printStackTrace(); }
 
 
