@@ -38,7 +38,6 @@ public class Login extends Menu {
     public void mostrarMenuLogIn() {
         String name;
         String pw;
-        //System.out.println(this.logins);
         System.out.println("Nome");
         name=leString();
         if(!userLogIn(name)) return;
@@ -57,6 +56,5 @@ public class Login extends Menu {
 
     public void startLogIn() {
         mostrarMenuLogIn();
-        //System.out.println("user: "+this.username +"\npassword: "+this.password);
     }
 }

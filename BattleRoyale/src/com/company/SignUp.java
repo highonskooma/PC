@@ -36,10 +36,7 @@ public class SignUp extends Menu {
         this.mostrarMenuSignUpU();
 
         System.out.println(this.user.toString());
-        //System.out.println("Username: "+this.username +"\nPaasword: "+this.password+"\nemail: "+this.email);
         System.out.print("Registado com sucesso!!\nA redireciona-lo para página inicial...\n\n\n");
-        //this.mostrarMenuInicial();
-
     }
 
     public void setEmail(String email) {

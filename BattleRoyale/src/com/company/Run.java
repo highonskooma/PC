@@ -1,7 +1,6 @@
 package com.company;
 import processing.core.PApplet;
 
-import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -27,7 +26,7 @@ public class Run extends PApplet{
             ArrayList<Utilizador> locals = (ArrayList<Utilizador>) ois.readObject();
             this.menuInicial.setLogins(locals);
             this.menuLogIn.setLogins(locals);
-            //this.menuSignUp.setLogins(locals);
+
             // print object
             System.out.println("Contas: "+locals);
 

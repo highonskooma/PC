@@ -1,10 +1,5 @@
 package com.company;
-
-import jdk.jshell.execution.Util;
-
 import java.io.Serializable;
-import java.util.concurrent.Semaphore;
-
 public class Utilizador implements Serializable {
     Integer id;
     String nome;

@@ -16,20 +16,6 @@ public class GreetClient {
 
     public void sendMessage(String msg) throws IOException {
         out.println(msg);
-        //String resp = in.readLine();
-        //return resp;
-    }
-
-    public Utilizador sendMessage(Utilizador usr) throws IOException, ClassNotFoundException {
-        ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream());
-        ObjectInputStream inStream = new ObjectInputStream(clientSocket.getInputStream());
-
-        outStream.writeObject(usr);
-
-        Utilizador resp = (Utilizador) inStream.readObject();
-
-        outStream.close();
-        return resp;
     }
 
     public void stopConnection() throws IOException {
@@ -40,10 +26,6 @@ public class GreetClient {
 
     public String listener() throws IOException {
         return in.readLine();
-    }
-
-    public BufferedReader getIn() {
-        return this.in;
     }
 
 }

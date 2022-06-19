@@ -1,6 +1,5 @@
 package com.company;
 import processing.core.PApplet;
-
 import java.io.Serializable;
 
 public class Avatar extends PApplet implements Serializable {
@@ -20,7 +19,6 @@ public class Avatar extends PApplet implements Serializable {
         y = random(1000);
         cor = 0;
     }
-
 
     public void setCor(int cor) {
         this.cor = cor;

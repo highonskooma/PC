@@ -50,6 +50,7 @@ public class Player extends Avatar{
 
     }
 
+    // mensagem para o servidor é codificada aqui
     @Override
     public String toString() {
         return (this.name+

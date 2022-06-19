@@ -1,19 +1,11 @@
 package com.company;
 import processing.awt.PSurfaceAWT;
 import processing.core.PApplet;
-import processing.core.PVector;
-
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
+
 
 public class Main extends PApplet {
     public Main() throws IOException {
@@ -25,10 +17,7 @@ public class Main extends PApplet {
 
     float x, y, x1, y1;
     float easing = (float) 0.05;
-    //PVector circle = new PVector(250, 250);
-    //int radius = 10;
     int p_size = 24;
-    //int mult = 2;
     int n_players;
     boolean locked = true;
     int lastTargetSpawn;
@@ -36,9 +25,6 @@ public class Main extends PApplet {
     ArrayList<Cristal> target = new ArrayList<Cristal>();
     Player p = new Player(this,p_size);
     GreetClient client = new GreetClient(); // socket to send info to other players
-    //Socket sock = new Socket("127.0.0.1",8091); // socket to receive info from other players
-
-
 
     public void settings() {
         size(600, 600);
@@ -140,7 +126,6 @@ public class Main extends PApplet {
             for(int i=1;i<n_players;i++) {
                 ts[i] = new Thread(() -> {
                     try {
-                        //BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                         String[] tkn = client.listener().split(" ");
                         Float t_x = Float.parseFloat(tkn[1]);
                         Float t_y = Float.parseFloat(tkn[2]);
@@ -149,8 +134,6 @@ public class Main extends PApplet {
 
                         if (dist(t_x, t_y, p.getX(), p.getY()) < t_size && (p.getSize() < t_size) && colorWinner(t_cor, p.getCor()) ) {
                             draw_gameover();
-                            //delay(100);
-                            //closeWindow();
                         } else {
                             p.draw();
                         }
@@ -174,7 +157,6 @@ public class Main extends PApplet {
 
 
         if (millis() - lastTargetSpawn > spawnDeltaTime) {
-            //System.out.println(lastTargetSpawn+" "+ target.toString());
             spawnTarget(); // spawn crystal every deltaTime
         }
     }
