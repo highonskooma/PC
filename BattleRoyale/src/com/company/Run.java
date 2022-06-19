@@ -10,6 +10,7 @@ public class Run extends PApplet{
     private Login menuLogIn;
     private SignUp menuSignUp;
     final String filepath="/home/blackgaze/Documents/PC/BattleRoyale/src/obj";
+    boolean winner = false;
 
     public Run() {
         this.menuInicial = new Menu();
@@ -41,11 +42,20 @@ public class Run extends PApplet{
         while (this.menuInicial.getOpcao() != 5) {
             System.out.print("\tAgar.IO\n\n");
             this.menuInicial.mostrarMenuInicial();
-
+            if (winner) {
+                for ( Utilizador u : this.menuInicial.getLogins()) {
+                    if (u.getNome().equals(this.menuInicial.getUser().getNome())) {
+                        u.incrementVictory();
+                        System.out.println("vitoria++");
+                    }
+                }
+                winner = false;
+            }
             switch (this.menuInicial.getOpcao()) {
                 case 1: // partida
                     try {
                         System.out.println("Por favor aguarde.");
+                        winner = true;
                         startConnection();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -90,13 +100,36 @@ public class Run extends PApplet{
     public void startConnection() throws IOException {
         GreetClient client = new GreetClient();
         client.startConnection("127.0.0.1",8091);
-        if (client.listener().equals("start")) {
-            PApplet.main("com.company.Main", new String[]{this.menuInicial.getUser().getNome(),"2"});
+        String[] server_reply = client.listener().split(" ");
+        System.out.println(server_reply[0]);
+        if (server_reply[0].equals("start")) {
+            PApplet.main("com.company.Main", new String[]{this.menuInicial.getUser().getNome(),server_reply[1]});
         }
     }
 
     public static void main(String[] args) {
         new Run().startInicial();
+        /*
+        int N=2;
+        Thread[] ts = new Thread[N];
+        for (int i=0; i<N; i++) {
+            int finalI = i;
+            ts[i] = new Thread(() -> {
+                try {
+                    GreetClient c = new GreetClient();
+                    c.startConnection("127.0.0.1",8091);
+                    String user = "user";
+                    user.concat(String.valueOf(finalI));
+                    PApplet.main("com.company.Main", new String[]{user,"2"});
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        for (int i=0; i<N; i++)	ts[i].start();
+        //for (int i=0; i<N; i++) ts[i].join();
+
+         */
     }
 
 }

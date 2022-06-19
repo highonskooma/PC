@@ -29,7 +29,7 @@ public class Main extends PApplet {
     //int radius = 10;
     int p_size = 24;
     //int mult = 2;
-    int n_players=1;
+    int n_players;
     boolean locked = true;
     int lastTargetSpawn;
     int spawnDeltaTime=1000;
@@ -57,6 +57,7 @@ public class Main extends PApplet {
         Frame frame = ( (PSurfaceAWT.SmoothCanvas) ((PSurfaceAWT)surface).getNative()).getFrame();
         //delay(2000);
         frame.dispose();
+        System.out.println("GAME OVER.");
         //noLoop();
     };
 

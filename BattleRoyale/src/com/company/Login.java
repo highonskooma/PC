@@ -49,7 +49,7 @@ public class Login extends Menu {
         for(Utilizador user : this.logins) {
             if(user.getNome().equals(name)) {
                 setUser(user);
-                System.out.println(user.toString());
+
             }
         }
 

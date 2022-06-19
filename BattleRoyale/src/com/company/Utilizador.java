@@ -72,6 +72,10 @@ public class Utilizador implements Serializable {
         this.password = p;
     }
 
+    public void incrementVictory() {
+        this.n_vitorias += 1;
+    }
+
     @Override
     public String toString() {
         return "{" +

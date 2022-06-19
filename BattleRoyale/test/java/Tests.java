@@ -14,53 +14,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Tests {
     Tests calculator;
     GreetClient client = new GreetClient();
-/*
-    @Test
-    public void givenClient_whenServerEchosMessage_thenCorrect() throws IOException {
-        GreetClient client = new GreetClient();
-        client.startConnection("127.0.0.1", 8091);
-
-        String resp1 = client.sendMessage("hello");
-        String resp2 = client.sendMessage("world");
-        String resp3 = client.sendMessage("!");
-        String resp4 = client.sendMessage("good bye");
-
-        assertEquals("hello", resp1);
-        assertEquals("world", resp2);
-        assertEquals("!", resp3);
-        assertEquals("good bye", resp4);
-
-        client.stopConnection();
-    }
 
     @Test
-    public void givenGreetingClient_whenServerRespondsWhenStarted_thenCorrect() throws IOException {
-        GreetClient client = new GreetClient();
-        client.startConnection("127.0.0.1", 8091);
-        String response = client.sendMessage("hello server");
-        System.out.println(response);
-        assertEquals("hello server", response);
-    }
+    public void twoClients() {
+        new Thread(() -> {
+            GreetClient client = new GreetClient();
+            try {
+                client.startConnection("127.0.0.1",8091);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            PApplet.main("com.company.Main", new String[]{"blackgaze","2"});
+        }).start();
+        new Thread(() -> {
+            GreetClient client = new GreetClient();
+            try {
+                client.startConnection("127.0.0.1",8091);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            PApplet.main("com.company.Main", new String[]{"highonskooma","2"});
+        }).start();
 
-    @Test
-    public void givenUtilizador_whenServerResponds_thenCorrect() throws IOException, ClassNotFoundException {
-        GreetClient client = new GreetClient();
-        Utilizador user = new Utilizador();
-        client.startConnection("127.0.0.1",8091);
-        String resp = client.sendMessage(user.toString());
-        System.out.println(resp);
     }
 
     @Test
     public void manyClients_whenServerBroadcast_theCorrect() throws IOException, InterruptedException {
-        int N=3;
+        int N=2;
         Thread[] ts = new Thread[N];
         for (int i=0; i<N; i++) {
+            int finalI = i;
             ts[i] = new Thread(() -> {
                 try {
                     GreetClient c = new GreetClient();
                     c.startConnection("127.0.0.1",8091);
-                    c.listener();
+                    String user = "user";
+                    user.concat(String.valueOf(finalI));
+                    PApplet.main("com.company.Main", new String[]{user,"2"});
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -70,6 +60,6 @@ public class Tests {
         for (int i=0; i<N; i++) ts[i].join();
     }
 
-*/
+
 
 }

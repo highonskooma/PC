@@ -34,8 +34,19 @@ room(Pids) ->
     receive
         stop -> io:format("room OK~n", []);
         {enter, Pid} ->
-            io:format("user entered ~n", []),
+            Length = length(Pids) + 1,
+            if
+                Length>2 ->
+                    Data = "start " ++ integer_to_list(Length) ++ "\n",
+                    io:format("user entered -starting game ~n", []),
+                    [ UPid ! {start,Data} || UPid <- Pids ],
+                    Pid ! {start, Data};
+
+                true ->
+                    io:format("user entered ~n", []) 
+            end,
             room([Pid | Pids]);
+
         {line, Data, Pid} ->
             io:format("received ~p ~n", [Data]),
             [ UPid ! {line,Data} || UPid <- Pids, UPid /= Pid ],
@@ -46,7 +57,7 @@ room(Pids) ->
             C= integer_to_list(length(Pids)),
             StringCristal="Cristal "++ X ++ " " ++ Y++" "++"\n",
             %[sendMessage(UPid,StringCristal) || UPid <- Pids],
-            io:format("received ~p ~n", [StringCristal]),
+            %io:format("received ~p ~n", [StringCristal]),
 
             room(Pids);
         {leave, Pid} ->
@@ -56,6 +67,10 @@ room(Pids) ->
 
 user(Sock, Room) ->
     receive
+        {start, Data} -> 
+            gen_tcp:send(Sock,Data),
+            io:format("starting game~n",[]),
+            user(Sock,Room);
         {broadcast, Data} -> 
             gen_tcp:send(Sock,Data),
             user(Sock,Room);
