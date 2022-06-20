@@ -4,6 +4,7 @@
 start(Port) -> spawn(fun() -> server_start(Port) end).
 stop(Server) -> Server ! stop.
 
+%função para randomizar as coordenadas dos cristais
 random_cristal() -> {rand:uniform()*rand:uniform(600),rand:uniform()*rand:uniform(600)}.
 
 server_start(Port) ->
@@ -28,12 +29,11 @@ acceptor(LSock, Room, Server) ->
     Room ! {enter, self()},
     user(Sock, Room).
 
-sendMessage(Pid, Message) -> Pid ! {broadcast, Message}.
-
 room(Pids) ->
     receive
         stop -> io:format("room OK~n", []);
         {enter, Pid} ->
+            % Verifica se existem mais de 2 players para começar o jogo, caso existam envia a mensagem start (num de players)
             Length = length(Pids) + 1,
             if
                 Length>2 ->
@@ -48,6 +48,7 @@ room(Pids) ->
             room([Pid | Pids]);
 
         {line, Data, Pid} ->
+            % envia a mensagem com as suas coordenadas
             io:format("received ~p ~n", [Data]),
             [ UPid ! {line,Data} || UPid <- Pids, UPid /= Pid ],
             
@@ -61,18 +62,17 @@ room(Pids) ->
 
             room(Pids);
         {leave, Pid} ->
+            % envia a mensagem para notificar que o utilizador saiu
             io:format("user left ~n", []),
             room(Pids -- [Pid])
     end.
 
 user(Sock, Room) ->
     receive
+        % Envia a mensagem para começar o jogo para todos os clientes, assim como o número de jogadores
         {start, Data} -> 
             gen_tcp:send(Sock,Data),
             io:format("starting game~n",[]),
-            user(Sock,Room);
-        {broadcast, Data} -> 
-            gen_tcp:send(Sock,Data),
             user(Sock,Room);
         stop ->
             gen_tcp:send(Sock, "close"),
@@ -82,7 +82,6 @@ user(Sock, Room) ->
             io:format("user left ~n");
         {line, Data} -> 
             gen_tcp:send(Sock, Data),
-            %io:format("socket id ~p ~n", [Sock]),
             user(Sock, Room);
         {tcp, _, Data} ->
             Room ! {line, Data, self()},
